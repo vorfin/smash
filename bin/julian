@@ -32,7 +32,12 @@ def main(recipient, fn=None):
 
     # local or remote file?
     if fn.startswith('http://') or fn.startswith('https://'):
-        conf = urllib.urlopen(fn).read()
+        req = urllib.urlopen(fn)
+        code = req.getcode()
+        conf = req.read()
+        if code != 200:
+            sys.stderr.write("julian: Couldn't read remote file '%s' (HTTP status '%d')\n" % (fn, code))
+            sys.exit(1)
     else:
         try:
             conf = open(fn, 'r').read()
