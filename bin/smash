@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Usage: julian <user@domain> [<filename>]
+Usage: smash <user@domain> [<filename>]
 """
 import datetime
 import getpass
@@ -12,8 +12,8 @@ from email.mime.text import MIMEText
 from subprocess import Popen, PIPE
 
 
-FILE = '~/.julian'
-FROM = 'julian <%s@%s>' % (getpass.getuser(), socket.gethostname())
+FILE = '~/.smash'
+FROM = 'smash <%s@%s>' % (getpass.getuser(), socket.gethostname())
 DELIMITER = ' :: '
 SENDMAIL = '/usr/sbin/sendmail'
 
@@ -36,13 +36,13 @@ def main(recipient, fn=None):
         code = req.getcode()
         conf = req.read()
         if code != 200:
-            sys.stderr.write("julian: Couldn't read remote file '%s' (HTTP status '%d')\n" % (fn, code))
+            sys.stderr.write("smash: Couldn't read remote file '%s' (HTTP status '%d')\n" % (fn, code))
             sys.exit(1)
     else:
         try:
             conf = open(fn, 'r').read()
         except IOError:
-            sys.stderr.write("julian: Couldn't read file '%s'\n" % fn)
+            sys.stderr.write("smash: Couldn't read file '%s'\n" % fn)
             sys.exit(1)
 
     # start processing

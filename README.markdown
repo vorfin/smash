@@ -1,26 +1,26 @@
-julian
+smash
 ------
 
-`julian` is a script that sends you some mail every so often.
+`smash` **S**ends **M**ail **A**nd **S**tuff. **H**ippopotamus.
 
 
 
 USAGE
 -----
 
-`julian` takes at most two arguments: an email address and,
+`smash` takes at most two arguments: an email address and,
 optionally, a file which contain your rules and messages.
 
-    $ julian me@example.com /path/to/stuff.txt
+    $ smash me@example.com /path/to/stuff.txt
 
 
-If a filename is not given, `julian` will try to read from
-`~/.julian`.
+If a filename is not given, `smash` will try to read from
+`~/.smash`.
 
 
 You can also pass a remote file, if that's your thing:
 
-    $ julian me@example.com http://example.com/reminders.txt
+    $ smash me@example.com http://example.com/reminders.txt
 
 
 
