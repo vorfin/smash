@@ -8,19 +8,23 @@ smash
 USAGE
 -----
 
-`smash` takes at most two arguments: an email address and,
-optionally, a file which contain your rules and messages.
+`smash` takes one or more arguments:
 
-    $ smash me@example.com /path/to/stuff.txt
+* An email address
+* Zero or more files which contain your rules and messages
 
-
-If a filename is not given, `smash` will try to read from
-`~/.smash`.
+If no filenames are given, `smash` will try to read from `~/.smash`.
 
 
-You can also pass a remote file, if that's your thing:
+    # read two local files
+    $ smash me@example.com /path/to/stuff.txt /path/to/other.txt
 
-    $ smash me@example.com http://example.com/reminders.txt
+    # just read the default file
+    $ smash me@example.com
+
+    # you can mix local and remote files if you like
+    $ smash me@example.com ~/.smash http://example.com/reminders.txt
+
 
 
 
@@ -40,7 +44,7 @@ three or four fields, separated by a double colon:
 The message body is optional and if not provided, the message subject
 will act as the body.
 
-Blank lines or lines beginning with '#' are ignored.
+Blank lines or lines beginning with `#` are ignored.
 
 
 

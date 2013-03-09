@@ -25,53 +25,54 @@ def fullpath(fn):
     return fn
 
 
-def main(recipient, fn=None):
+def main(recipient, *fns):
     # no file given, use the default
-    if not fn:
-        fn = fullpath(FILE)
+    if not fns:
+        fns = [fullpath(FILE)]
 
-    # local or remote file?
-    if fn.startswith('http://') or fn.startswith('https://'):
-        req = urllib.urlopen(fn)
-        code = req.getcode()
-        conf = req.read()
-        if code != 200:
-            sys.stderr.write("smash: Couldn't read remote file '%s' (HTTP status '%d')\n" % (fn, code))
-            sys.exit(1)
-    else:
-        try:
-            conf = open(fn, 'r').read()
-        except IOError:
-            sys.stderr.write("smash: Couldn't read file '%s'\n" % fn)
-            sys.exit(1)
-
-    # start processing
-    for line in conf.splitlines():
-        line = line.strip()
-        if not line or line.startswith('#'):
-            continue
-
-        parts = line.split(DELIMITER, 3)
-        format, date, subject = parts[0:3]
-        if len(parts) == 4:
-            body = parts[3]
+    for fn in fns:
+        # local or remote file?
+        if fn.startswith('http://') or fn.startswith('https://'):
+            req = urllib.urlopen(fn)
+            code = req.getcode()
+            conf = req.read()
+            if code != 200:
+                sys.stderr.write("smash: Couldn't read remote file '%s' (HTTP status '%d')\n" % (fn, code))
+                continue
         else:
-            body = subject
+            try:
+                conf = open(fn, 'r').read()
+            except IOError:
+                sys.stderr.write("smash: Couldn't read file '%s'\n" % fn)
+                continue
 
-        now = datetime.datetime.now()
-        if now.strftime(format) == date:
-            msg = MIMEText(body)
-            msg['From'] = FROM
-            msg['To'] = recipient
-            msg['Subject'] = subject
-            p = Popen([SENDMAIL, '-t'], stdin=PIPE)
-            p.communicate(msg.as_string())
+        # start processing
+        for line in conf.splitlines():
+            line = line.strip()
+            if not line or line.startswith('#'):
+                continue
+
+            parts = line.split(DELIMITER, 3)
+            format, date, subject = parts[0:3]
+            if len(parts) == 4:
+                body = parts[3]
+            else:
+                body = subject
+
+            now = datetime.datetime.now()
+            if now.strftime(format) == date:
+                msg = MIMEText(body)
+                msg['From'] = FROM
+                msg['To'] = recipient
+                msg['Subject'] = subject
+                p = Popen([SENDMAIL, '-t'], stdin=PIPE)
+                p.communicate(msg.as_string())
 
 
 
 if __name__ == '__main__':
     try:
-        main(*sys.argv[1:3])
+        main(*sys.argv[1:])
     except TypeError:
         sys.stderr.write(__doc__.lstrip())
         sys.exit(2)
